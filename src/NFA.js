@@ -1,5 +1,4 @@
-if (typeof define !== 'function') var define = require('amdefine')(module);
-define(['./Kit'],function (K) {
+const K = require('./Kit');
 
 /**
 A Naive NFA Implementation
@@ -301,8 +300,4 @@ function structure(a) {
   return a;
 }
 
-
-return NFA;
-
-
-});
+module.exports = NFA;

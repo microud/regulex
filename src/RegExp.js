@@ -1,5 +1,7 @@
-if (typeof define !== 'function') var define = require('amdefine')(module);
-define(['./parse','./Kit','./NFA'],function (parse,K,NFA) {
+const K = require('./Kit');
+const NFA = require('./NFA');
+const parse = require('./parse');
+
 /**
 Mock RegExp class
 */
@@ -379,6 +381,4 @@ function _readonly(obj,attrs) {
   });
 }
 
-return RegExp;
-
-});
+module.exports = RegExp;

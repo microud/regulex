@@ -12,9 +12,6 @@
     "RegExp",
     "Regulex"
   ],
-  "dependencies":{
-    "amdefine":"~1.0.0"
-  },
   "author": {
     "name": "Jex"
   },

@@ -1,7 +1,3 @@
-if (typeof define !== 'function') var define = require('amdefine')(module);
-define(function () {
-/*Kit*/
-
 var AP=Array.prototype,
     slice=AP.slice,
     isBrowser=(function () {
@@ -381,7 +377,7 @@ function locals(f) {
   return '{\n'+methods.join(',\n')+'\n}';
 }
 
-return {
+module.exports = {
   sortUnique:sortUnique,
   idUnique:idUnique,hashUnique:hashUnique,
   Set:Set, repeats:repeats,
@@ -393,5 +389,3 @@ return {
   log:log,isBrowser:isBrowser,
   locals:locals
 };
-
-});
