@@ -1,5 +1,5 @@
 {
-  "name": "regulex",
+  "name": "cjs-regulex",
   "version": "0.0.5",
   "description": "JavaScript Regular Expression Parser and Visualizer.",
   "main": "index",
