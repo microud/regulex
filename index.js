@@ -1,10 +1,11 @@
-if (typeof define !== 'function') var define = require('amdefine')(module);
-define(['./src/Kit','./src/NFA','./src/RegExp','./src/parse'],
-function (Kit,NFA,RegExp,parse) {
-  return { // NPM,Bower,Require.js.....Doom!
-    Kit:Kit,
-    NFA:NFA,
-    RegExp:RegExp,
-    parse:parse
-  };
-});
+const Kit = require('./src/Kit');
+const NFA = require('./src/NFA');
+const RegExp = require('./src/RegExp');
+const parse = require('./src/parse');
+
+module.exports = {
+  Kit,
+  NFA,
+  RegExp,
+  parse,
+};
