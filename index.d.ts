@@ -1,4 +1,4 @@
-declare module 'cjs-regulex' {
+declare module 'regulex-cjs' {
 
   export type Node = ExactNode | CharsetNode | GroupNode | ChoiceNode | AssertNode | DotNode | BackrefNode | EmptyNode;
 
