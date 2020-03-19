@@ -12,6 +12,7 @@
     "RegExp",
     "Regulex"
   ],
+  "types": "index.d.ts",
   "author": {
     "name": "Jex"
   },
