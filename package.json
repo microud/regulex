@@ -2,7 +2,7 @@
   "name": "regulex-cjs",
   "version": "0.0.5",
   "description": "JavaScript Regular Expression Parser and Visualizer.",
-  "main": "index",
+  "main": "src/regulex.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/CJex/regulex.git"
@@ -16,5 +16,9 @@
   "author": {
     "name": "Jex"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@types/raphael": "^2.1.30",
+    "raphael": "^2.3.0"
+  }
 }

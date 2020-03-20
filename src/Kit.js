@@ -340,7 +340,7 @@ function toPrint(s,isRaw) {
   var ctrl=/[\x00-\x1F\x7F-\x9F]/,unicode=/[\u009F-\uFFFF]/;
   s=s.split('').map(function (c) {
     if (!isRaw && printEscapeMap.hasOwnProperty(c)) return printEscapeMap[c];
-    else if (unicode.test(c)) return '\\u'+('00'+ord(c).toString(16).toUpperCase()).slice(-4);
+    // else if (unicode.test(c)) return '\\u'+('00'+ord(c).toString(16).toUpperCase()).slice(-4);
     else if (ctrl.test(c)) return '\\x'+("0"+ord(c).toString(16).toUpperCase()).slice(-2);
     return c;
   }).join('');
@@ -349,23 +349,6 @@ function toPrint(s,isRaw) {
 //flatten two-dimensional array to one-dimension
 function flatten2(a) {return [].concat.apply([],a)}
 function repeats(s,n) {return new Array(n+1).join(s)}
-
-function log() {
-  var a=slice.call(arguments);
-  if (isBrowser) {
-    Function.prototype.apply.apply(console.log,[console,a]);
-  } else {//Assume it is Node.js
-    var s='util';
-    var util=require(s); // skip require.js
-    a.forEach(function (x) {
-      console.log(util.inspect(x,{
-        showHidden:false,customInspect:true,
-        depth:64,colors:true
-      }));
-    });
-
-  }
-}
 
 function locals(f) {
   var src=f.toString();
@@ -386,6 +369,6 @@ module.exports = {
   parseCharset:parseCharset,
   chr:chr,ord:ord,pred:pred,succ:succ,toPrint:toPrint,
   flatten2:flatten2,
-  log:log,isBrowser:isBrowser,
+  log:console.log,isBrowser:isBrowser,
   locals:locals
 };

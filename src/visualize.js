@@ -3,7 +3,7 @@ const K = require('./Kit');
 
 parse.exportConstants();
 
-var FONT_SIZE=16,LABEL_FONT_SIZE=14,PATH_LEN=16,BG_COLOR='#EEE',
+var FONT_SIZE=16,LABEL_FONT_SIZE=14,PATH_LEN=16,BG_COLOR='transparent',
     FONT_FAMILY='DejaVu Sans Mono,monospace';
 
 var _multiLine=false; /* global flag quick work*/
@@ -30,6 +30,10 @@ function initTmpText(paper) {
   ).attr({'font-family':FONT_FAMILY,'font-size':FONT_SIZE});
 }
 
+function calculateDrawLength(s) {
+  return s.split('').filter(char => char.charCodeAt(0) < 0 || char.charCodeAt(0) > 255).length * 2 + s.split('').filter(char => char.charCodeAt(0) >= 0 && char.charCodeAt(0) <= 255).length
+}
+
 /**
 @param {AST} re AST returned by `parse`
 */
@@ -47,7 +51,7 @@ function visualize(re,flags,paper) {
   var texts=highlight(re.tree);
 
   texts.unshift(text('/',hlColorMap.delimiter));
-  texts.unshift(text("RegExp: "));
+  texts.unshift(text("正则: "));
   texts.push(text('/',hlColorMap.delimiter));
   if (flags) texts.push(text(flags,hlColorMap.flags));
   var charSize=getCharSize(FONT_SIZE,'bold'),
@@ -57,7 +61,7 @@ function visualize(re,flags,paper) {
   width=texts.reduce(function(x,t) {
     t.x=x;
     t.y=startY;
-    var w=t.text.length*charSize.width;
+    var w=calculateDrawLength(t.text)*charSize.width;
     return x+w;
   },startX);
   width+=PAPER_MARGIN;
@@ -136,7 +140,7 @@ function textRect(s,x,y,bgColor,textColor) {
   s=K.toPrint(s);
   var padding=6;
   var charSize=getCharSize(FONT_SIZE);
-  var tw=s.length*charSize.width,h=charSize.height+padding*2,w=tw+padding*2;
+  var tw=calculateDrawLength(s)*charSize.width,h=charSize.height+padding*2,w=tw+padding*2;
   var rect={
     type:'rect',
     x:x,y:y-(h/2),
@@ -170,7 +174,7 @@ function textLabel(x,y,s,color) {// x is center x ,y is bottom y
   if (lines.length>1) {
     textWidth=Math.max.apply(Math,lines.map(function (a) {return a.length}));
   } else {
-    textWidth=s.length;
+    textWidth=calculateDrawLength(s);
   }
   textWidth=textWidth*charSize.width;
   var margin=4;
@@ -269,7 +273,7 @@ function point(x,y,fill) {
 
 var plotNode={
   startPoint:function (node,x,y) {
-    return point(x,y,"r(0.5,0.5)#EFE-green")
+    return point(x,y,"green")
   },
   endPoint:function (node,x,y) {
     return point(x,y,"r(0.5,0.5)#FFF-#000")

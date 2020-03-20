@@ -3,7 +3,7 @@ const NFA = require('./NFA');
 const RegExp = require('./RegExp');
 const parse = require('./parse');
 const visualize = require('./visualize');
-const Raphael = require('./libs/raphael');
+const Raphael = require('raphael');
 
 module.exports = {
   Kit: Kit,

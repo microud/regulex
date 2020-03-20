@@ -70,4 +70,8 @@ declare module 'regulex-cjs' {
   }
 
   export function parse(regex: string): AST;
+
+  export const Raphael: RaphaelStatic;
+
+  export function visualize(ast: AST, flag: string, paper: RaphaelPaper);
 }
