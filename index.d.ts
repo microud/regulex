@@ -15,12 +15,14 @@ declare module 'regulex-cjs' {
 
   interface ExactNode extends BaseNode {
     type: 'exact';
+    chars: string;
   }
 
   interface CharsetNode extends BaseNode {
     type: 'charset';
     ranges: string[];
     classes: string[];
+    chars: string;
     exclude: boolean;
   }
 

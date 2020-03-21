@@ -6,6 +6,37 @@ parse.exportConstants();
 var FONT_SIZE=16,LABEL_FONT_SIZE=14,PATH_LEN=16,BG_COLOR='transparent',
     FONT_FAMILY='DejaVu Sans Mono,monospace';
 
+var colorSet = {
+  startPoint: '#52c41a',
+  endPoint: '#597ef7',
+  background: '#FFF',
+  dotBackground: '#7cb305',
+  dotText: '#1f1f1f',
+  exactBackground: '#bae7ff',
+  backrefBackground: '#d3adf7',
+  backrefText: '#69c0ff',
+  charsetCharBackground: '#b7eb8f',
+  charsetCharText: '#1f1f1f',
+  charsetClassBackground: '#5cdbd3',
+  charsetClassText: '#1f1f1f',
+  charsetRangeBackground: '#08979c',
+  charsetRangeText: '#ffffff',
+  charsetBoxExcludeBackground: 'pink',
+  charsetBoxBackground: '#fff1b8',
+  charsetLabelExclude: '#C00',
+  assertNonWordBoundaryBackground: '#ff7875',
+  assertNonWordBoundaryText: '#ffffffff',
+  assertWordBoundaryBackground: '#d3adf7',
+  assertWordBoundaryText: '#ffffff',
+  assertEndBackground: '#d3adf7',
+  assertEndText: '#ffffff',
+  assertBeginBackground: '#d3adf7',
+  assertBeginText: '#ffffff',
+  repeatLine: '#391085',
+  smoothLine: '#002329',
+  normalLine: '#002329'
+};
+
 var _multiLine=false; /* global flag quick work*/
 
 var PAPER_MARGIN=10;
@@ -35,16 +66,18 @@ function calculateDrawLength(s) {
 }
 
 /**
-@param {AST} re AST returned by `parse`
-*/
-function visualize(re,flags,paper) {
+ * @param {AST} re AST returned by `parse`
+ * @param {string} flags
+ * @param paper
+ */
+function visualize(re,flags,paper, option) {
   paper.clear();
   paper.setSize(0,0);
   var bg = paper.rect(0,0,0,0);
-  bg.attr("fill", BG_COLOR);
-  bg.attr("stroke", BG_COLOR);
-  
-  
+  bg.attr("fill", colorSet.background);
+  bg.attr("stroke", colorSet.background);
+
+
   initTmpText(paper);
   _multiLine=!!~flags.indexOf('m');
 
@@ -67,7 +100,7 @@ function visualize(re,flags,paper) {
   width+=PAPER_MARGIN;
   height=charSize.height+PAPER_MARGIN*2;
   texts=paper.add(texts);
-  
+
   paper.setSize(width,charSize.height+PAPER_MARGIN*2);
 
   var ret=plot(re.tree,0,0);
@@ -76,14 +109,14 @@ function visualize(re,flags,paper) {
   width=Math.max(ret.width+2*PAPER_MARGIN,width);
 
   paper.setSize(width,height);
-  
+
   bg.attr('width',width);
   bg.attr('height',height);
-  
-  
+
+
   translate(ret.items,PAPER_MARGIN,PAPER_MARGIN*2+charSize.height-ret.y);
   paper.add(ret.items);
-  
+
 }
 
 
@@ -200,7 +233,7 @@ function hline(x,y,destX) {
     path:["M",x,y,"H",destX],
     'stroke-linecap':'butt',
     'stroke-linejoin':'round',
-    'stroke':'#333',
+    'stroke':colorSet.normalLine,
     'stroke-width':2,
     _translate:function (x,y) {
       var p=this.path;
@@ -247,7 +280,7 @@ function smoothLine(fromX,fromY,toX,toY) {
     path:p,
     'stroke-linecap':'butt',
     'stroke-linejoin':'round',
-    'stroke':'#333',
+    'stroke':colorSet.smoothLine,
     'stroke-width':2,
     _translate:_translate
   };
@@ -273,10 +306,10 @@ function point(x,y,fill) {
 
 var plotNode={
   startPoint:function (node,x,y) {
-    return point(x,y,"green")
+    return point(x,y,colorSet.startPoint)
   },
   endPoint:function (node,x,y) {
-    return point(x,y,"r(0.5,0.5)#FFF-#000")
+    return point(x,y,colorSet.endPoint)
   },
   empty:function (node,x,y) {
     var len=10;
@@ -288,18 +321,18 @@ var plotNode={
     };
   },
   exact:function (node,x,y) {
-    var color='skyblue';
+    var color=colorSet.exactBackground;
     return textRect(node.chars,x,y,color);
   },
   dot:function (node,x,y) {
-    var bgColor='DarkGreen',textColor='white';
+    var bgColor=colorSet.dotBackground,textColor='color.dotText';
     var a=textRect('AnyCharExceptNewLine',x,y,bgColor,textColor);
     a.rect.r=10;
     a.rect.tip="AnyChar except CR LF"
     return a;
   },
   backref:function (node,x,y) {
-    var bgColor='navy',textColor='white';
+    var bgColor=colorSet.backrefBackground,textColor=colorSet.backrefText;
     var a=textRect('Backref #'+node.num,x,y,bgColor,textColor);
     a.rect.r=8;
     return a;
@@ -356,7 +389,7 @@ var plotNode={
       };
       if (repeat.nonGreedy) {
         //txt+="(NonGreedy!)";
-        p.stroke="Brown";
+        p.stroke=colorSet.normalLine;
         p['stroke-dasharray']="-";
       }
       items.push(p);
@@ -475,11 +508,11 @@ var plotNode={
   charset:function (node,x,y) {
     var padding=6,spacing=4;
     var clsDesc={d:'Digit',D:'NonDigit',w:'Word',W:'NonWord',s:'WhiteSpace',S:'NonWhiteSpace'};
-    var charBgColor='LightSkyBlue',charTextColor='black',
-        clsBgColor='Green',clsTextColor='white',
-        rangeBgColor='teal',rangeTextColor='white',
-        boxColor=node.exclude?'Pink':'Khaki',
-        labelColor=node.exclude?'#C00':'';
+    var charBgColor=colorSet.charsetCharBackground,charTextColor=colorSet.charsetCharText,
+        clsBgColor=colorSet.charsetClassBackground,clsTextColor=colorSet.charsetClassText,
+        rangeBgColor=colorSet.charsetRangeBackground,rangeTextColor=colorSet.charsetRangeText,
+        boxColor=node.exclude? colorSet.charsetBoxExcludeBackground : colorSet.charsetBoxBackground,
+        labelColor=node.exclude ? colorSet.charsetLabelExclude :'';
     var simple=onlyCharClass(node);
     if (simple) {
       var a=textRect(clsDesc[node.classes[0]],x,y,clsBgColor,clsTextColor);
@@ -620,10 +653,10 @@ var plotNode={
   },
   assert:function (node,x,y) {
     var simpleAssert={
-      AssertNonWordBoundary:{bg:"maroon",fg:"white"},
-      AssertWordBoundary:{bg:"purple",fg:"white"},
-      AssertEnd:{bg:"Indigo",fg:"white"},
-      AssertBegin:{bg:"Indigo",fg:"white"}
+      AssertNonWordBoundary:{bg:colorSet.assertNonWordBoundaryBackground,fg:colorSet.assertNonWordBoundaryText},
+      AssertWordBoundary:{bg:colorSet.assertWordBoundaryBackground,fg:colorSet.assertWordBoundaryText},
+      AssertEnd:{bg:colorSet.assertEndBackground,fg:colorSet.assertEndText},
+      AssertBegin:{bg:colorSet.assertBeginBackground,fg:colorSet.assertBeginText}
     };
     var conf,nat=node.assertionType,txt=nat.replace('Assert','')+'!';
     if (conf=simpleAssert[nat]) {
