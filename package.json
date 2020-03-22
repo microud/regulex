@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/CJex/regulex.git"
   },
+  "scripts": {
+    "build": "webpack --mode production"
+  },
   "keywords": [
     "Regular Expression",
     "RegExp",
@@ -20,5 +23,9 @@
   "dependencies": {
     "@types/raphael": "^2.1.30",
     "raphael": "^2.3.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
   }
 }
