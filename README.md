@@ -6,6 +6,8 @@ Try it now: <https://jex.im/regulex/>
 
 **This is the legacy version!**
 
+**Switch export method to commonjs.**
+
 
 ### Features
 
@@ -16,15 +18,14 @@ Try it now: <https://jex.im/regulex/>
 
 ### Install for Node.js
 ```
-npm install regulex
+npm install regulex-cjs
 ```
 
 
-### Build for Browser
-This command will generate bundle `dist/regulex.js` for browser side:
-```bash
-npm install -g requirejs
-r.js -o build-config.js
+### Using
+```javascript
+const regulex = require('regulex-cjs');
+// or import * as regulex from 'regulex-cjs'
 ```
 
 ### API

@@ -1,11 +1,11 @@
 {
   "name": "regulex-cjs",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "JavaScript Regular Expression Parser and Visualizer.",
   "main": "src/regulex.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CJex/regulex.git"
+    "url": "https://github.com/microud/regulex.git"
   },
   "scripts": {
     "build": "webpack --mode production"
