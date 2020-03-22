@@ -9,7 +9,7 @@ var FONT_SIZE=16,LABEL_FONT_SIZE=14,PATH_LEN=16,BG_COLOR='transparent',
 var colorSet = {
   startPoint: '#52c41a',
   endPoint: '#597ef7',
-  background: '#FFF',
+  background: '#fafafa',
   dotBackground: '#7cb305',
   dotText: '#1f1f1f',
   exactBackground: '#bae7ff',
@@ -25,16 +25,18 @@ var colorSet = {
   charsetBoxBackground: '#fff1b8',
   charsetLabelExclude: '#C00',
   assertNonWordBoundaryBackground: '#ff7875',
-  assertNonWordBoundaryText: '#ffffffff',
+  assertNonWordBoundaryText: '#ffffff',
   assertWordBoundaryBackground: '#d3adf7',
   assertWordBoundaryText: '#ffffff',
   assertEndBackground: '#d3adf7',
   assertEndText: '#ffffff',
   assertBeginBackground: '#d3adf7',
   assertBeginText: '#ffffff',
-  repeatLine: '#391085',
-  smoothLine: '#002329',
-  normalLine: '#002329'
+  repeatPath: '#391085',
+  smoothPath: '#391085',
+  normalPath: '#391085',
+  greedySkipPath: '#00474f',
+  nonGreedySkipPath: '#613400',
 };
 
 var _multiLine=false; /* global flag quick work*/
@@ -69,8 +71,12 @@ function calculateDrawLength(s) {
  * @param {AST} re AST returned by `parse`
  * @param {string} flags
  * @param paper
+ * @param options
  */
-function visualize(re,flags,paper, option) {
+function visualize(re,flags,paper, options) {
+  if (options.color) {
+    Object.assign(colorSet, options.color);
+  }
   paper.clear();
   paper.setSize(0,0);
   var bg = paper.rect(0,0,0,0);
@@ -233,7 +239,7 @@ function hline(x,y,destX) {
     path:["M",x,y,"H",destX],
     'stroke-linecap':'butt',
     'stroke-linejoin':'round',
-    'stroke':colorSet.normalLine,
+    'stroke':colorSet.normalPath,
     'stroke-width':2,
     _translate:function (x,y) {
       var p=this.path;
@@ -243,7 +249,7 @@ function hline(x,y,destX) {
 }
 
 //return element config
-function smoothLine(fromX,fromY,toX,toY) {
+function smoothPath(fromX,fromY,toX,toY) {
   var radius=10,p,_translate;
   var signX=fromX>toX?-1:1,signY=fromY>toY?-1:1;
   if (Math.abs(fromY-toY)<radius*1.5 /*|| Math.abs(fromX-toX)<radius*2*/) {
@@ -280,7 +286,7 @@ function smoothLine(fromX,fromY,toX,toY) {
     path:p,
     'stroke-linecap':'butt',
     'stroke-linejoin':'round',
-    'stroke':colorSet.smoothLine,
+    'stroke':colorSet.smoothPath,
     'stroke-width':2,
     _translate:_translate
   };
@@ -341,7 +347,7 @@ var plotNode={
     if (elideOK(node)) return plotNode.empty(null,x,y);
     var padding=10,LABEL_MARGIN=4;
     var repeat=node.repeat,txt="",items=[];
-    var NonGreedySkipPathColor='darkgreen';
+    var NonGreedySkipPathColor=colorSet.nonGreedySkipPath;
     /*if (repeat.min===0 && !node._branched) {
       node._branched=true;
       return plotNode.choice({type:CHOICE_NODE,branches:[[{type:EMPTY_NODE}],[node]]},x,y);
@@ -384,12 +390,12 @@ var plotNode={
               'Q',x+rectW,y,ret.x+ret.width+padding,y
             ],
         _translate:_curveTranslate,
-        stroke:'maroon',
+        stroke:colorSet.repeatPath,
         'stroke-width':2
       };
       if (repeat.nonGreedy) {
         //txt+="(NonGreedy!)";
-        p.stroke=colorSet.normalLine;
+        p.stroke=colorSet.normalPath;
         p['stroke-dasharray']="-";
       }
       items.push(p);
@@ -415,7 +421,7 @@ var plotNode={
               'Q',x+skipRectW-r,y,x+skipRectW,y
             ],
         _translate:_curveTranslate,
-        stroke:repeat.nonGreedy? NonGreedySkipPathColor:'#333',
+        stroke:repeat.nonGreedy? NonGreedySkipPathColor:colorSet.greedySkipPath,
         'stroke-width':2
       };
       if (p) translate([p],padding,0);
@@ -477,14 +483,14 @@ var plotNode={
       translate(a.items,dx-a.x,dy-a.y);
       items=items.concat(a.items);
       /*
-      var p1=smoothLine(x,y,dx-a.x+a.lineInX,y+dy-a.y);
-      var p2=smoothLine(lineOutX,y,a.lineOutX+dx-a.x,y+dy-a.y);
+      var p1=smoothPath(x,y,dx-a.x+a.lineInX,y+dy-a.y);
+      var p2=smoothPath(lineOutX,y,a.lineOutX+dx-a.x,y+dy-a.y);
       items=items.concat(a.items);
       items.push(p1,p2);*/
        // current a.y based on y(=0),its middle at y=0
       var lineY=y+dy-a.y;
-      var p1=smoothLine(x,y,x+marginX,lineY);
-      var p2=smoothLine(lineOutX,y,x+width-marginX,lineY);
+      var p1=smoothPath(x,y,x+marginX,lineY);
+      var p2=smoothPath(lineOutX,y,x+width-marginX,lineY);
       items.push(p1,p2);
       if (x+marginX!==dx-a.x+a.lineInX) {
         items.push(hline(x+marginX,lineY,dx-a.x+a.lineInX));

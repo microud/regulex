@@ -71,9 +71,46 @@ declare module 'regulex-cjs' {
     groupCount: number;
   }
 
+  interface IVisualizeColorSet {
+    startPoint?: string;
+    endPoint?: string;
+    background?: string;
+    dotBackground?: string;
+    dotText?: string;
+    exactBackground?: string;
+    backrefBackground?: string;
+    backrefText?: string;
+    charsetCharBackground?: string;
+    charsetCharText?: string;
+    charsetClassBackground?: string;
+    charsetClassText?: string;
+    charsetRangeBackground?: string;
+    charsetRangeText?: string;
+    charsetBoxExcludeBackground?: string;
+    charsetBoxBackground?: string;
+    charsetLabelExclude?: string;
+    assertNonWordBoundaryBackground?: string;
+    assertNonWordBoundaryText?: string;
+    assertWordBoundaryBackground?: string;
+    assertWordBoundaryText?: string;
+    assertEndBackground?: string;
+    assertEndText?: string;
+    assertBeginBackground?: string;
+    assertBeginText?: string;
+    repeatPath?: string;
+    smoothPath?: string;
+    normalPath?: string;
+    greedySkipPath?: string;
+    nonGreedySkipPath?: string;
+  }
+
+  interface IVisualizeOption {
+    color?: IVisualizeColorSet;
+  }
+
   export function parse(regex: string): AST;
 
-  export const Raphael: RaphaelStatic;
+  export const Raphael: any;
 
-  export function visualize(ast: AST, flag: string, paper: RaphaelPaper);
+  export function visualize(ast: AST, flag: string, paper: any, options?: IVisualizeOption);
 }
