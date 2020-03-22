@@ -1,6 +1,6 @@
 {
   "name": "regulex-cjs",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "JavaScript Regular Expression Parser and Visualizer.",
   "main": "src/regulex.js",
   "repository": {

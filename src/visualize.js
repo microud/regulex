@@ -74,7 +74,7 @@ function calculateDrawLength(s) {
  * @param options
  */
 function visualize(re,flags,paper, options) {
-  if (options.color) {
+  if (options && options.color) {
     Object.assign(colorSet, options.color);
   }
   paper.clear();
